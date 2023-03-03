@@ -11,7 +11,7 @@ import { UserService } from "./services/user-services.js"
 import { ProductService } from './services/product-services.js'
 
 const app = express()
-const port = 5000
+const port = 3000
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/')
