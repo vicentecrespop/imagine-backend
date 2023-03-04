@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import multer from 'multer'
 import crypto from 'crypto'
 import { extname } from 'path'
+import cors from 'cors'
 
 import { authMiddleware } from './middlewares/authMiddleware.js'
 import { UserService } from "./services/user-services.js"
@@ -25,6 +26,7 @@ const storage = multer.diskStorage({
 const uploadMiddleware = multer({ storage })
 
 app.use(express.json())
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 
 app.get('/', async (req, res) => {
@@ -128,6 +130,17 @@ app.post('/products', uploadMiddleware.single('image'), async (req, res) => {
     await productService.create(product)
 
     return res.status(201).json({msg: 'Produto cadastrado com sucesso!!'})
+
+})
+
+app.post('/products/sell', async (req, res) => {
+    const { products } = req.body
+    const productService = new ProductService()
+    for(const product of products) {
+        await productService.sellProducts(product)
+    }
+
+    return res.status(200).json({msg: 'Estoque alterado com sucesso!!'})
 
 })
 
